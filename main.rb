@@ -41,15 +41,23 @@ def merge(left, right)
 end
 
 def build_tree(list)
-  list = merge_sort(list)
-  puts list.inspect
+  #r = Random.new
+  #head_num = r.rand(1...length-1)
   length = list.length
-  middle = length / 2
-  head = Node.new(list[middle])
-  list.each_with_index do |element, index|
-    if index == middle
+  head_num = 4
+  puts "Head num is #{head_num}"
+  head = Node.new(list[head_num])
+  (0..length-1).step(2) do |index|
+    if index == head_num
     else 
-      temp_node = Node.new(element)
+      temp_node = Node.new(list[index])
+      head.set_node(temp_node)
+    end
+  end
+  (1..length-1).step(2) do |index|
+    if index == head_num
+    else 
+      temp_node = Node.new(list[index])
       head.set_node(temp_node)
     end
   end
@@ -70,34 +78,46 @@ def breadth_first_search(head)
   end
 end
 
-def preorder(node)
+def preorder(node, value)
   if node == nil
-    return
+  elsif node.get_value == value
+    return node
+  else
+    left = preorder(node.get_left_child, value)
+    right = preorder(node.get_right_child, value)
+    left or right
   end
-  puts node.get_value
-  preorder(node.get_left_child)
-  preorder(node.get_right_child)
 end
 
-def inorder(node)
+def inorder(node, value)
   if node == nil
-    return
+  elsif node.get_value == value
+    return node
+  else
+    left = inorder(node.get_left_child, value)
+    right = inorder(node.get_right_child, value)
+    left or right
   end
-  inorder(node.get_left_child)
-  puts node.get_value
-  inorder(node.get_right_child)
 end
 
-def postorder(node)
+def postorder(node, value)
   if node == nil
     return
+  elsif node.get_value == value
+    return node
+  else
+    left = postorder(node.get_left_child, value)
+    right = postorder(node.get_right_child, value)
+    left or right
   end
-  postorder(node.get_left_child)
-  postorder(node.get_right_child)
-  puts node.get_value
 end
 
-head_node = build_tree([1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324])
+list = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324]
+puts list.inspect
+head_node = build_tree(list)
 
+node = postorder(head_node, 7)
 
-breadth_first_search(head_node)
+puts node.get_value
+puts node.get_left_child.get_value
+puts node.get_parent.get_parent.get_value

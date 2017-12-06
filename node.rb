@@ -23,7 +23,7 @@ class Node
   end
 
   def set_node(node)
-    if node.get_value < @value
+    if node.get_value <= @value
       if @left_child == nil
         node.set_parent(self)
         @left_child = node
